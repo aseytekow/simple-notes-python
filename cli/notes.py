@@ -1,5 +1,6 @@
 import sqlite3
 from os import system, name
+from datetime import datetime
 
 def clear():
     if name == 'nt':
@@ -9,14 +10,15 @@ def clear():
 
 db = sqlite3.connect('notes.db')
 cursor = db.cursor()
-cursor.execute('CREATE TABLE IF NOT EXISTS NOTES(ID INTEGER PRIMARY KEY, TITLE TEXT, NOTE TEXT)')
+cursor.execute('CREATE TABLE IF NOT EXISTS NOTES(ID INTEGER PRIMARY KEY, TITLE TEXT, NOTE TEXT, DATE TEXT)')
 
 def add():
     clear()
     
     title = input('Title: ')
     note = input('Note: ')
-    cursor.execute(f"INSERT INTO NOTES VALUES(NULL, '{title}', '{note}')")
+    date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    cursor.execute(f"INSERT INTO NOTES VALUES(NULL, '{title}', '{note}', '{date}')")
     db.commit()
     main()
     
@@ -45,7 +47,7 @@ def show_all():
     notes = cursor.execute('SELECT * FROM NOTES')
     if notes:
         for note in notes:
-            print(f"ID: {note[0]}\nTitle: {note[1]}\nNote: {note[2]}\n\n---------------------------------------------------------------------\n")
+            print(f"ID: {note[0]}\nTitle: {note[1]}\nNote: {note[2]}\nAdded date: {note[3]}\n\n---------------------------------------------------------------------\n")
     else:
         print('No note!')
         
@@ -59,7 +61,7 @@ def view():
     cursor.execute(f"SELECT * FROM NOTES WHERE ID = {idx}")
     data = cursor.fetchall()
     if data:
-        print(f"ID: {data[0][0]}\nTitle: {data[0][1]}\nNote: {data[0][2]}")
+        print(f"ID: {data[0][0]}\nTitle: {data[0][1]}\nNote: {data[0][2]}\nAdded date: {data[0][3]}")
     else:
         print('No note in this ID.')
     
