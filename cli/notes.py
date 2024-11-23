@@ -20,6 +20,25 @@ def add():
     db.commit()
     main()
     
+def update():
+    clear()
+    
+    idx = int(input('Enter note ID to update: '))
+    cursor.execute(f"SELECT * FROM NOTES WHERE ID = {idx}")
+    data = cursor.fetchall()
+    if data:
+        print(f"Current Title: {data[0][1]}\nCurrent Note: {data[0][2]}")
+        title = input('New Title: ')
+        note = input('New Note: ')
+        cursor.execute(f"UPDATE NOTES SET TITLE = '{title}', NOTE = '{note}' WHERE ID = {idx}")
+        db.commit()
+        print('Note updated!')
+    else:
+        print('No note found with this ID.')
+    
+    input('\nPress ENTER key.')
+    main()
+    
 def show_all():
     clear()
     
@@ -60,19 +79,21 @@ def delete():
 def main():
     clear()
     
-    print('1. Add note.\n2. Show all notes.\n3. View note.\n4. Delete note.\n5. Exit.\n')
+    print('1. Add note.\n2. Update note.\n3. Show all notes.\n4. View note.\n5. Delete note.\n6. Exit.\n')
 
     num = int(input('Enter your choice: '))
 
     if num == 1:
         add()
     elif num == 2:
-        show_all()
+        update()
     elif num == 3:
-        view()
+        show_all()
     elif num == 4:
-        delete()
+        view()
     elif num == 5:
+        delete()
+    elif num == 6:
         db.close()
         exit()
     else:
