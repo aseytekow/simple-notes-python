@@ -78,28 +78,52 @@ def delete():
     input('\nPress ENTER key.')
     main()
     
+def search():
+    clear()
+    
+    keyword = input("Enter keyword to search: ")
+    cursor.execute(f"SELECT * FROM NOTES WHERE TITLE LIKE '%{keyword}%' OR NOTE LIKE '{keyword}'")
+    results = cursor.fetchall()
+    if results:
+        for note in results:
+            print(f"ID: {note[0]}\nTitle: {note[1]}\nNote: {note[2]}\nAdded date: {note[3]}")
+    else:
+        print("No notes foind!")
+    
+    input('\nPress ENTER key.')
+    main()
+    
 def main():
     clear()
     
-    print('1. Add note.\n2. Update note.\n3. Show all notes.\n4. View note.\n5. Delete note.\n6. Exit.\n')
+    print('1. Add note.\n2. Update note.\n3. Show all notes.\n4. View note.\n5. Delete note.\n6. Search note\n7. Exit.\n')
 
-    num = int(input('Enter your choice: '))
+    while True:
+        num = input('Enter your choice: ')
+        
+        if not num:
+            print('Invalid input! Please enter a number between 1 and 7.')
+            continue
+        
+        num = int(num)
 
-    if num == 1:
-        add()
-    elif num == 2:
-        update()
-    elif num == 3:
-        show_all()
-    elif num == 4:
-        view()
-    elif num == 5:
-        delete()
-    elif num == 6:
-        db.close()
-        exit()
-    else:
-        main()
+        if num == 1:
+            add()
+        elif num == 2:
+            update()
+        elif num == 3:
+            show_all()
+        elif num == 4:
+            view()  
+        elif num == 5:
+            delete()
+        elif num == 6:
+            search()
+        elif num == 7:
+            db.close()
+            exit()
+        else:
+            main()
         
 if __name__ == '__main__':
     main()
